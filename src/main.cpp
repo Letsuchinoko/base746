@@ -23,7 +23,7 @@ void testLvgl()
   lv_obj_remove_flag(btn1, LV_OBJ_FLAG_PRESS_LOCK);
 
   label = lv_label_create(btn1);
-  lv_label_set_text(label, "Button");
+  lv_label_set_text(label, "Bouton");
   lv_obj_center(label);
 
   lv_obj_t * btn2 = lv_button_create(lv_screen_active());
@@ -40,22 +40,43 @@ void testLvgl()
 #ifdef ARDUINO
 
 #include "lvglDrivers.h"
-
+#include "Wire.h"
+#include "Adafruit_TCS34725.h"
+#define SCL 32;
+#define SDA 31;
+Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_614MS, TCS34725_GAIN_1X);
 // à décommenter pour tester la démo
 // #include "demos/lv_demos.h"
 
 void mySetup()
 {
-  // à décommenter pour tester la démo
-  // lv_demo_widgets();
+  Serial.begin(9600);
 
-  // Initialisations générales
+  if (tcs.begin()) {
+    Serial.println("Found sensor");
+  } else {
+    Serial.println("No TCS34725 found ... check your connections");
+    while (1);
+  }
   testLvgl();
 }
 
 void loop()
 {
-  // Inactif (pour mise en veille du processeur)
+  uint16_t r, g, b, c, colorTemp, lux;
+
+  tcs.getRawData(&r, &g, &b, &c);
+  // colorTemp = tcs.calculateColorTemperature(r, g, b);
+  colorTemp = tcs.calculateColorTemperature_dn40(r, g, b, c);
+  lux = tcs.calculateLux(r, g, b);
+
+  Serial.print("Color Temp: "); Serial.print(colorTemp, DEC); Serial.print(" K - ");
+  Serial.print("Lux: "); Serial.print(lux, DEC); Serial.print(" - ");
+  Serial.print("R: "); Serial.print(r, DEC); Serial.print(" ");
+  Serial.print("G: "); Serial.print(g, DEC); Serial.print(" ");
+  Serial.print("B: "); Serial.print(b, DEC); Serial.print(" ");
+  Serial.print("C: "); Serial.print(c, DEC); Serial.print(" ");
+  Serial.println(" ");
 }
 
 void myTask(void *pvParameters)

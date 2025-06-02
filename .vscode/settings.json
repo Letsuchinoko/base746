@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "stm32746g_discovery_audio.h": "c"
-    }
+        "stm32746g_discovery_audio.h": "c",
+        "iostream": "cpp"
+    },
+    "cmake.ignoreCMakeListsMissing": true,
+    "C_Cpp.errorSquiggles": "disabled"
 }

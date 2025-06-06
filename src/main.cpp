@@ -7,6 +7,7 @@ lv_obj_t* B;
 lv_obj_t* C;
 lv_obj_t* Couleur;
 int temperature, lumiere, rouge, vert, bleu, contraste;
+float red,green,blu;
 uint16_t r, g, b, c, colorTemp, lux;
 static void event_handler(lv_event_t * e)
 {
@@ -39,12 +40,12 @@ void testLvgl()
   lv_obj_align(B, LV_ALIGN_CENTER,0,-20);
   lv_obj_align(C, LV_ALIGN_CENTER,0,0);
   lv_obj_align(Couleur, LV_ALIGN_CENTER,0,20);
-  lv_label_set_text(temp, "");
-  lv_label_set_text(imperator, "");
-  lv_label_set_text(R, "");
-  lv_label_set_text(G, "");
-  lv_label_set_text(B, "");
-  lv_label_set_text(C, "");
+  lv_label_set_text(temp, "Temperature");
+  lv_label_set_text(imperator, "Luminosite");
+  lv_label_set_text(R, "Rouge");
+  lv_label_set_text(G, "Vert");
+  lv_label_set_text(B, "Bleu");
+  lv_label_set_text(C, "0");
   lv_label_set_text(Couleur, "Couleur");
   lv_obj_t * btn1 = lv_button_create(lv_screen_active());
   lv_obj_add_event_cb(btn1, event_handler, LV_EVENT_ALL, NULL);
@@ -86,12 +87,13 @@ void loop()
   // colorTemp = tcs.calculateColorTemperature(r, g, b);
   colorTemp = tcs.calculateColorTemperature_dn40(r, g, b, c);
   lux = tcs.calculateLux(r, g, b);
-  int temperature=colorTemp;
-  int lumiere=lux;
-  int rouge=r;
-  int vert=g;
-  int bleu=b;
-  int contraste=c;
+  temperature=colorTemp;
+  lumiere=lux;
+  contraste=c;
+  tcs.getRGB(&red,&green,&blu);
+  rouge=(unsigned int)red;
+  vert=(unsigned int)green;
+  bleu=(unsigned int)blu;
   Serial.print("Color Temp: "); Serial.print(colorTemp, DEC); Serial.print(" K - ");
   Serial.print("Lux: "); Serial.print(lux, DEC); Serial.print(" - ");
   Serial.print("R: "); Serial.print(r, DEC); Serial.print(" ");
@@ -105,20 +107,38 @@ void loop()
   lv_label_set_text_fmt(G, "Vert :%d",vert);
   lv_label_set_text_fmt(B, "Bleu :%d",bleu);
   lv_label_set_text_fmt(C, "%d",contraste);
-  if (rouge>500&&vert>500&&bleu>500)
+  if (r>500&&g>500&&b>500)
   {
     lv_label_set_text(Couleur,"Blanc");
-  } else if (vert>rouge&&vert>bleu)
-  {
-      lv_label_set_text(Couleur,"Vert");
   }
-  else if(bleu>rouge&&bleu>vert)
+  else if (r<100&&g<100&&b<100)
+  {
+    lv_label_set_text(Couleur, "Noir");
+  }
+  
+  else if (g>300&r<300&b<400)
+  {
+    lv_label_set_text(Couleur,"Vert");
+  }
+  else if(b>300&r<300&g<300)
   {
     lv_label_set_text(Couleur,"Bleu");
   }
-  else if(rouge>vert&&rouge>bleu)
+  else if(r>200&&g<200&b<200)
   {
     lv_label_set_text(Couleur, "Rouge");
+  }
+  else if(rouge>=108&&rouge<=111)
+  {
+    lv_label_set_text(Couleur,"Orange");
+  }
+  else if(rouge==75&&vert==100)
+  {
+    lv_label_set_text(Couleur,"Jaune");
+  }
+  else
+  {
+    lv_label_set_text(Couleur,"Couleur non specifie");
   }
 }
 

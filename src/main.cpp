@@ -5,13 +5,15 @@ lv_obj_t* R;
 lv_obj_t* G;
 lv_obj_t* B;
 lv_obj_t* C;
+lv_obj_t* Couleur;
+int temperature, lumiere, rouge, vert, bleu, contraste;
 uint16_t r, g, b, c, colorTemp, lux;
 static void event_handler(lv_event_t * e)
 {
     lv_event_code_t code = lv_event_get_code(e);
 
     if(code == LV_EVENT_CLICKED) {
-        LV_LOG_USER("Clicked");
+      LV_LOG_USER("Clicked");
     }
     else if(code == LV_EVENT_VALUE_CHANGED) {
         LV_LOG_USER("Toggled");
@@ -29,17 +31,24 @@ void testLvgl()
   G=lv_label_create(lv_screen_active());
   B=lv_label_create(lv_screen_active());
   C=lv_label_create(lv_screen_active());
+  Couleur=lv_label_create(lv_screen_active());
   lv_obj_align(temp, LV_ALIGN_CENTER,0,-100);
   lv_obj_align(imperator, LV_ALIGN_CENTER,0,-80);
   lv_obj_align(R, LV_ALIGN_CENTER,0,-60);
   lv_obj_align(G, LV_ALIGN_CENTER,0,-40);
   lv_obj_align(B, LV_ALIGN_CENTER,0,-20);
   lv_obj_align(C, LV_ALIGN_CENTER,0,0);
-  lv_label_set_text(temp,"");
+  lv_obj_align(Couleur, LV_ALIGN_CENTER,0,20);
+  lv_label_set_text(temp, "");
   lv_label_set_text(imperator, "");
+  lv_label_set_text(R, "");
+  lv_label_set_text(G, "");
+  lv_label_set_text(B, "");
+  lv_label_set_text(C, "");
+  lv_label_set_text(Couleur, "Couleur");
   lv_obj_t * btn1 = lv_button_create(lv_screen_active());
   lv_obj_add_event_cb(btn1, event_handler, LV_EVENT_ALL, NULL);
-  lv_obj_align(btn1, LV_ALIGN_CENTER, 0, 40);
+  lv_obj_align(btn1, LV_ALIGN_CENTER, 0, 60);
   lv_obj_remove_flag(btn1, LV_OBJ_FLAG_PRESS_LOCK);
 
   label = lv_label_create(btn1);
@@ -79,6 +88,10 @@ void loop()
   lux = tcs.calculateLux(r, g, b);
   int temperature=colorTemp;
   int lumiere=lux;
+  int rouge=r;
+  int vert=g;
+  int bleu=b;
+  int contraste=c;
   Serial.print("Color Temp: "); Serial.print(colorTemp, DEC); Serial.print(" K - ");
   Serial.print("Lux: "); Serial.print(lux, DEC); Serial.print(" - ");
   Serial.print("R: "); Serial.print(r, DEC); Serial.print(" ");
@@ -86,8 +99,27 @@ void loop()
   Serial.print("B: "); Serial.print(b, DEC); Serial.print(" ");
   Serial.print("C: "); Serial.print(c, DEC); Serial.print(" ");
   Serial.println(" ");
-  lv_label_set_text_fmt(temp, "%d", temperature);
-  lv_label_set_text_fmt(imperator,"%d", lumiere);
+  lv_label_set_text_fmt(temp, "Temperature :%dK", temperature);
+  lv_label_set_text_fmt(imperator,"Luminosite :%dlx", lumiere);
+  lv_label_set_text_fmt(R, "Rouge :%d",rouge);
+  lv_label_set_text_fmt(G, "Vert :%d",vert);
+  lv_label_set_text_fmt(B, "Bleu :%d",bleu);
+  lv_label_set_text_fmt(C, "%d",contraste);
+  if (rouge>500&&vert>500&&bleu>500)
+  {
+    lv_label_set_text(Couleur,"Blanc");
+  } else if (vert>rouge&&vert>bleu)
+  {
+      lv_label_set_text(Couleur,"Vert");
+  }
+  else if(bleu>rouge&&bleu>vert)
+  {
+    lv_label_set_text(Couleur,"Bleu");
+  }
+  else if(rouge>vert&&rouge>bleu)
+  {
+    lv_label_set_text(Couleur, "Rouge");
+  }
 }
 
 void myTask(void *pvParameters)

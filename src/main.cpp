@@ -82,7 +82,9 @@ void mySetup()
 }
 
 void loop()
-{ 
+{
+  lv_color_t col;
+  lv_obj_t * scr = lv_scr_act(); 
   tcs.getRawData(&r, &g, &b, &c);
   // colorTemp = tcs.calculateColorTemperature(r, g, b);
   colorTemp = tcs.calculateColorTemperature_dn40(r, g, b, c);
@@ -110,35 +112,51 @@ void loop()
   if (r>500&&g>500&&b>500)
   {
     lv_label_set_text(Couleur,"Blanc");
+    lv_obj_set_style_bg_color(scr,col=lv_color_make(255, 255, 255),LV_PART_MAIN);
+    lv_obj_set_style_text_color(scr,col=lv_color_make(0, 0, 0),LV_PART_MAIN);
   }
   else if (r<100&&g<100&&b<100)
   {
     lv_label_set_text(Couleur, "Noir");
+    lv_obj_set_style_bg_color(scr,col=lv_color_make(0, 0, 0),LV_PART_MAIN);
+    lv_obj_set_style_text_color(scr,col=lv_color_make(255, 255, 255),LV_PART_MAIN);
   }
   
   else if (g>300&r<300&b<400)
   {
     lv_label_set_text(Couleur,"Vert");
+    lv_obj_set_style_bg_color(scr,col=lv_color_make(0, 255, 0),LV_PART_MAIN);
+    lv_obj_set_style_text_color(scr,col=lv_color_make(0, 0, 0),LV_PART_MAIN);
   }
   else if(b>300&r<300&g<300)
   {
     lv_label_set_text(Couleur,"Bleu");
+    lv_obj_set_style_bg_color(scr,col=lv_color_make(0, 0, 255),LV_PART_MAIN);
+    lv_obj_set_style_text_color(scr,col=lv_color_make(0, 0, 0),LV_PART_MAIN);
   }
   else if(r>200&&g<200&b<200)
   {
     lv_label_set_text(Couleur, "Rouge");
+    lv_obj_set_style_bg_color(scr,col=lv_color_make(255, 0, 0),LV_PART_MAIN);
+    lv_obj_set_style_text_color(scr,col=lv_color_make(0, 0, 0),LV_PART_MAIN);
   }
-  else if(rouge>=108&&rouge<=114)
+  else if(rouge>=108&&rouge<=120)
   {
     lv_label_set_text(Couleur,"Orange");
+    lv_obj_set_style_bg_color(scr,col=lv_color_make(255, 128, 0),LV_PART_MAIN);
+    lv_obj_set_style_text_color(scr,col=lv_color_make(0, 0, 0),LV_PART_MAIN);
   }
-  else if(rouge==75&&vert==100)
+  else if(rouge==75&&vert>=100&&vert<=104)
   {
     lv_label_set_text(Couleur,"Jaune");
+    lv_obj_set_style_bg_color(scr,col=lv_color_make(255, 255, 0),LV_PART_MAIN);
+    lv_obj_set_style_text_color(scr,col=lv_color_make(0, 0, 0),LV_PART_MAIN);
   }
   else
   {
     lv_label_set_text(Couleur,"Couleur non specifie");
+    lv_obj_set_style_bg_color(scr,col=lv_color_make(255, 255, 255),LV_PART_MAIN);
+    lv_obj_set_style_text_color(scr,col=lv_color_make(0, 0, 0),LV_PART_MAIN);
   }
 }
 

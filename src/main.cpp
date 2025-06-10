@@ -128,7 +128,7 @@ void loop()
   {
     lv_label_set_text(Couleur, "Rouge");
   }
-  else if(rouge>=108&&rouge<=111)
+  else if(rouge>=108&&rouge<=114)
   {
     lv_label_set_text(Couleur,"Orange");
   }

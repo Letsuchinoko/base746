@@ -3,11 +3,33 @@
 #include "stm32746g_discovery_lcd.h"
 #include "stm32746g_discovery_ts.h"
 
+static SemaphoreHandle_t lvglMutex;
+
+bool lvglLock(TickType_t xBlockTime)
+{
+    if (xSemaphoreTake(lvglMutex, xBlockTime) == pdTRUE)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool lvglUnlock()
+{
+    if (xSemaphoreGive(lvglMutex) == pdTRUE)
+    {
+        return true;
+    }
+    return false;
+}
+
 static void lvglTask(void *pvParameters)
 {
     while (1)
     {
+        xSemaphoreTake(lvglMutex, portMAX_DELAY);
         uint32_t time_till_next = lv_timer_handler();
+        xSemaphoreGive(lvglMutex);
         vTaskDelay(pdMS_TO_TICKS(time_till_next));
     }
 }
@@ -56,6 +78,8 @@ void setup()
     BSP_LCD_LayerDefaultInit(0, LCD_FB_START_ADDRESS);
 
     BSP_TS_Init(480, 272);
+
+    lvglMutex = xSemaphoreCreateMutex();
 
     lv_init();
 

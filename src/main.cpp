@@ -95,9 +95,11 @@ void loop()
   rouge=(unsigned int)red;
   vert=(unsigned int)green;
   bleu=(unsigned int)blu;
+  lv_lock();
   sr=(int)lv_slider_get_value(sliderouge);
   sv=(int)lv_slider_get_value(slidervert);
   sb=(int)lv_slider_get_value(sliderbleu);
+  lv_unlock();
   Serial.print("Color Temp: "); Serial.print(colorTemp, DEC); Serial.print(" K - ");
   Serial.print("Lux: "); Serial.print(lux, DEC); Serial.print(" - ");
   Serial.print("R: "); Serial.print(rouge, DEC); Serial.print(" ");
@@ -107,48 +109,66 @@ void loop()
   Serial.println(" ");
   if (r>500&&g>500&&b>500)
   {
+    lv_lock();
     lv_obj_set_style_bg_color(scr,col=lv_color_make(255, 255, 255),LV_PART_MAIN);
     lv_obj_set_style_text_color(scr,col=lv_color_make(0, 0, 0),LV_PART_MAIN);
+    lv_unlock();
   }
   else if (r<100&&g<100&&b<100)
   {
+    lv_lock();
     lv_obj_set_style_bg_color(scr,col=lv_color_make(0, 0, 0),LV_PART_MAIN);
     lv_obj_set_style_text_color(scr,col=lv_color_make(255, 255, 255),LV_PART_MAIN);
+    lv_unlock();
   }
   
   else if (g>300&r<300&b<400)
   {
+    lv_lock();
     lv_obj_set_style_bg_color(scr,col=lv_color_make(0, 255, 0),LV_PART_MAIN);
     lv_obj_set_style_text_color(scr,col=lv_color_make(0, 0, 0),LV_PART_MAIN);
+    lv_unlock();
   }
   else if(b>300&r<300&g<300)
   {
+    lv_lock();
     lv_obj_set_style_bg_color(scr,col=lv_color_make(0, 0, 255),LV_PART_MAIN);
     lv_obj_set_style_text_color(scr,col=lv_color_make(0, 0, 0),LV_PART_MAIN);
+    lv_unlock();
   }
   else if(r>200&&g<200&b<200)
   {
+    lv_lock();
     lv_obj_set_style_bg_color(scr,col=lv_color_make(255, 0, 0),LV_PART_MAIN);
     lv_obj_set_style_text_color(scr,col=lv_color_make(0, 0, 0),LV_PART_MAIN);
+    lv_unlock();
   }
   else if(rouge>=108&&rouge<=120)
   {
+    lv_lock();
     lv_obj_set_style_bg_color(scr,col=lv_color_make(255, 128, 0),LV_PART_MAIN);
     lv_obj_set_style_text_color(scr,col=lv_color_make(0, 0, 0),LV_PART_MAIN);
+    lv_unlock();
   }
   else if(rouge==75&&vert>=100&&vert<=104)
   {
+    lv_lock();
     lv_obj_set_style_bg_color(scr,col=lv_color_make(255, 255, 0),LV_PART_MAIN);
     lv_obj_set_style_text_color(scr,col=lv_color_make(0, 0, 0),LV_PART_MAIN);
+    lv_unlock();
   }
   else
   {
+    lv_lock();
     lv_obj_set_style_bg_color(scr,col=lv_color_make(147, 21, 50),LV_PART_MAIN);
     lv_obj_set_style_text_color(scr,col=lv_color_make(255, 255, 255),LV_PART_MAIN);
+    lv_unlock();
   }
   if(sr==rouge&&sv==vert&&sb==bleu)
       {
+        lv_lock();
         lv_label_set_text(Couleur, "Meme couleur");
+        lv_unlock();
       }
 }
 

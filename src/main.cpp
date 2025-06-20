@@ -170,7 +170,13 @@ void loop()
         lv_label_set_text(Couleur, "Meme couleur");
         lv_unlock();
       }
-}
+  else
+  {
+      lv_lock();
+      lv_label_set_text(Couleur, "Pas la meme couleur");
+      lv_unlock();
+    }
+  }
 
 void myTask(void *pvParameters)
 {
